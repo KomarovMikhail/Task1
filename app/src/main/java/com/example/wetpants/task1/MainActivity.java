@@ -24,11 +24,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-
+                Intent intent = new Intent(MainActivity.this, TimerActivity.class);
+                startActivity(intent);
             }
         }.start();
 
-        Intent intent = new Intent(MainActivity.this, TimerActivity.class);
-        startActivity(intent);
+
     }
 }

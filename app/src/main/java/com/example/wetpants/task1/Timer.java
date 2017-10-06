@@ -14,7 +14,7 @@ public class Timer extends CountDownTimer {
     private String decades[] = {"", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят",
             "семьдесят", "восемьдесят", "девяносто"};
     private String teens[] = {"десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
-            "пятнадцать", "шестнадцать", "восемнадцать", "девятнадцать"};
+            "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"};
     private String hundreds[] = {"", "сто", "двести", "триста", "четыреста", "пятьсот",
             "шестьсот", "семьсот", "восемьсот", "девятьсот"};
 
@@ -49,7 +49,8 @@ public class Timer extends CountDownTimer {
 
     @Override
     public void onFinish() {
-
+        stringTime = "";
+        text.setText(stringTime);
     }
 
     public String getStringTime() {
