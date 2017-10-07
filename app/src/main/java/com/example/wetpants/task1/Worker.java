@@ -19,7 +19,7 @@ public class Worker extends  Thread {
     }
 
     public void run() {
-        timer = new Timer(1000000, 1000, text);
+        //timer = new Timer(1000000, 1000, text);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

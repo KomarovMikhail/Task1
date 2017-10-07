@@ -1,5 +1,7 @@
 package com.example.wetpants.task1;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +15,9 @@ public class TimerActivity extends AppCompatActivity {
     private TextView text;
     private boolean started = false;
     private Timer timer;
-    private Worker worker;
-    private long savedTime;
+    //private Worker worker;
+    private long savedTime = 0;
+    private RetainedFragment dataFragment;
 
 
     @Override
@@ -22,9 +25,32 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
 
+        FragmentManager fm = getFragmentManager();
+        dataFragment = (RetainedFragment) fm.findFragmentByTag("data");
+
+        if (dataFragment == null) {
+            dataFragment = new RetainedFragment();
+            fm.beginTransaction().add(dataFragment, "data").commit();
+            Data data = new Data(started, savedTime);
+            dataFragment.setData(data);
+        }
+
+        Data data = new Data(dataFragment.getData());
+        started = data.getStarted();
+        savedTime = data.getSavedTime();
+
         button = (Button)findViewById(R.id.button);
         text = (TextView)findViewById(R.id.text);
-        timer = new Timer(1000000, 1000, text);
+        if (started) {
+            button.setText(R.string.button_stop);
+            timer = new Timer(1000000, 1000, text, button, savedTime);
+            text.setText(timer.getStringTime());
+            timer.start();
+        } else {
+            button.setText(R.string.button_start);
+            savedTime = 0;
+            timer = new Timer(1000000, 1000, text, button, savedTime);
+        }
 
 //        if (started) {
 //            text.setText(timer.getStringTime());
@@ -49,10 +75,14 @@ public class TimerActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
+    @Override
+    protected void onDestroy() {
+        Data data = new Data(started, timer.getTime());
+        dataFragment.setData(data);
+        super.onDestroy();
 
+    }
 
 }

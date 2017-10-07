@@ -1,12 +1,16 @@
 package com.example.wetpants.task1;
 
 import android.os.CountDownTimer;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class Timer extends CountDownTimer {
 
     private TextView text;
+    private Button button;
     private long totalTime;
+    private long passedTime;
+    private long time;
 
     private String stringTime = "";
     private String digits[] = {"", "один", "два", "три", "четыре", "пять",
@@ -23,18 +27,41 @@ public class Timer extends CountDownTimer {
         this.totalTime = millisInFuture;
     }
 
-    public Timer(long millisInFuture, long countDownInterval, TextView text) {
+    public Timer(long millisInFuture, long countDownInterval,
+                 TextView text, Button button, long passedTime) {
         super(millisInFuture, countDownInterval);
+        this.passedTime = passedTime;
+        this.time = passedTime;
         this.totalTime = millisInFuture;
         this.text = text;
-        text.setText(stringTime);
+        this.button = button;
+        setStringTime(totalTime - passedTime);
     }
 
     @Override
     public void onTick(long m) {
-        int currentTime = (int) (totalTime - m) / 1000;
+        setStringTime(m);
+    }
+
+    @Override
+    public void onFinish() {
+        stringTime = "";
+        text.setText(stringTime);
+        button.setText(R.string.button_start);
+    }
+
+    public String getStringTime() {
+        return stringTime;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    private void setStringTime(long m) {
+        int currentTime = (int) (totalTime + passedTime - m) / 1000;
         if (currentTime >= 1000) {
-            throw new RuntimeException("Time limit exhausted");
+            return;
         }
         if ((currentTime % 100) / 10 == 1) {
             stringTime = hundreds[currentTime / 100] + " " +
@@ -45,15 +72,6 @@ public class Timer extends CountDownTimer {
                     digits[currentTime % 10];
         }
         text.setText(stringTime);
-    }
-
-    @Override
-    public void onFinish() {
-        stringTime = "";
-        text.setText(stringTime);
-    }
-
-    public String getStringTime() {
-        return stringTime;
+        time = currentTime;
     }
 }
