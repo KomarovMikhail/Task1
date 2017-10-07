@@ -43,13 +43,13 @@ public class TimerActivity extends AppCompatActivity {
         text = (TextView)findViewById(R.id.text);
         if (started) {
             button.setText(R.string.button_stop);
-            timer = new Timer(1000000, 1000, text, button, savedTime);
+            timer = new Timer(1000000 - savedTime, 1000, text, button);
             text.setText(timer.getStringTime());
             timer.start();
         } else {
             button.setText(R.string.button_start);
             savedTime = 0;
-            timer = new Timer(1000000, 1000, text, button, savedTime);
+            timer = new Timer(1000000 - savedTime, 1000, text, button);
         }
 
 //        if (started) {

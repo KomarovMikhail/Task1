@@ -8,9 +8,9 @@ public class Timer extends CountDownTimer {
 
     private TextView text;
     private Button button;
-    private long totalTime;
+    private long totalTime = 1000000;
     private long passedTime;
-    private long time;
+    private long time; //in seconds
 
     private String stringTime = "";
     private String digits[] = {"", "один", "два", "три", "четыре", "пять",
@@ -28,14 +28,13 @@ public class Timer extends CountDownTimer {
     }
 
     public Timer(long millisInFuture, long countDownInterval,
-                 TextView text, Button button, long passedTime) {
+                 TextView text, Button button) {
         super(millisInFuture, countDownInterval);
-        this.passedTime = passedTime;
-        this.time = passedTime;
-        this.totalTime = millisInFuture;
+        this.passedTime = 1000000 - millisInFuture;
+        this.time = passedTime / 1000;
         this.text = text;
         this.button = button;
-        setStringTime(totalTime - passedTime);
+        setStringTime(millisInFuture);
     }
 
     @Override
@@ -55,13 +54,13 @@ public class Timer extends CountDownTimer {
     }
 
     public long getTime() {
-        return time;
+        return time * 1000;
     }
 
     private void setStringTime(long m) {
         int currentTime = (int) (totalTime + passedTime - m) / 1000;
         if (currentTime >= 1000) {
-            return;
+            throw new RuntimeException("Time limit exhausted");
         }
         if ((currentTime % 100) / 10 == 1) {
             stringTime = hundreds[currentTime / 100] + " " +
@@ -72,6 +71,6 @@ public class Timer extends CountDownTimer {
                     digits[currentTime % 10];
         }
         text.setText(stringTime);
-        time = currentTime;
+        time++;
     }
 }
